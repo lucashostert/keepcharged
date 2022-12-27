@@ -1,0 +1,43 @@
+<div *ngIf="showpreloader" class="d-flex justify-content-center align-items-center h-100">
+  <img src="./assets/images/loading.gif" alt="Carregando..." width="100">
+</div>
+
+<div class="row" [class.d-none]="showpreloader">
+  <div class="col-12 d-flex align-items-stretch grid-margin">
+    <div class="row flex-grow">
+      <div class="col-12 stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-1">Custo de Carregamento</h4>
+            <p class="card-description">Cadastre os custo de carregamento aceitos nos estabelecimentos.</p>
+
+            <form class="forms-sample mt-4" #custoForm="ngForm" (ngSubmit)="save()">
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="form-group row" *ngIf="custoCarregamento.id != null">
+                    <div class="custom-control custom-checkbox offset-sm-3">
+                      <input type="checkbox" class="custom-control-input" id="custoCaboStatus" name="custoCaboStatus" [(ngModel)]="custoCarregamento.status">
+                      <label class="custom-control-label" for="custoCaboStatus">Ativo</label>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label for="custoCaboNome" class="col-sm-3 col-form-label">Identificação:</label>
+                    <div class="col px-0">
+                      <input type="text" class="form-control" id="custoCaboNome" name="custoCaboNome" placeholder="Custo de carregamento" required [(ngModel)]="custoCarregamento.nome" [class.is-invalid]="inputInvalid('custoCaboNome')">
+                      <div *ngIf="inputInvalid('custoCaboNome')" class="invalid-feedback">
+                        <small class="form-text" *ngIf="inputError('custoCaboNome', 'required')">O nome do custo de carregamento é requirido.</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-success">Salvar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

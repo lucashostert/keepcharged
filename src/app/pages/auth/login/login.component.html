@@ -1,0 +1,34 @@
+<div *ngIf="showpreloader" class="d-flex justify-content-center align-items-center h-100vh">
+  <img src="./assets/images/loading.gif" alt="Carregando..." width="100">
+</div>
+<div [class.d-none]="showpreloader">
+  <div class="row d-flex justify-content-center align-items-center h-100vh">
+    <div class="col-12 col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Login</h4>
+          <form class="forms-sample" #loginForm="ngForm" (ngSubmit)="signIn()">
+            <div class="form-group">
+              <label for="loginEmail">Endereço de e-mail</label>
+              <input type="email" class="form-control" id="loginEmail" name="loginEmail" placeholder="exemplo@provedor.com" [(ngModel)]="login.email" [class.is-invalid]="inputInvalid('loginEmail')" autocomplete="email" required>
+              <div *ngIf="inputInvalid('loginEmail')" class="invalid-feedback">
+                <small class="form-text" *ngIf="inputError('loginEmail', 'required')">O e-mail é requirido.</small>
+                <small class="form-text" *ngIf="inputError('loginEmail', 'emailInvalid')">O e-mail é invalido.</small>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="loginPassword">Senha</label>
+              <input type="password" class="form-control" id="loginPassword" name="loginPassword" placeholder="Senha" [(ngModel)]="login.password" [class.is-invalid]="inputInvalid('loginPassword')" autocomplete="current-password" required>
+              <div *ngIf="inputInvalid('loginPassword')" class="invalid-feedback">
+                <small class="form-text" *ngIf="inputError('loginPassword', 'required')">A Senha é requirida.</small>
+              </div>
+            </div>
+            <div class="d-flex justify-content-center">
+              <button type="submit" class="btn btn-success">Entrar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

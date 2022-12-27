@@ -1,0 +1,143 @@
+<div *ngIf="showpreloader" class="d-flex justify-content-center align-items-center h-100">
+  <img src="./assets/images/loading.gif" alt="Carregando..." width="100">
+</div>
+<div class="row" [class.d-none]="showpreloader">
+  <div class="col-12 d-flex align-items-stretch grid-margin">
+    <div class="row flex-grow">
+      <div class="col-12 stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-1">Opções do Mapa</h4>
+            <p class="card-description">Insira as opções para o controle do mapa no aplicativo.</p>
+
+            <form class="forms-sample mt-4" name="mapOptionsForm" (ngSubmit)="save()">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Bounds Draw</label>
+                    <div class="col-sm-9">
+                      <div class="custom-control custom-radio custom-control-inline">
+                        <input class="custom-control-input" type="radio" id="boundsDraw1" name="boundsDraw" value="true" checked [(ngModel)]="mapOptions.clusterOptions.boundsDraw">
+                        <label class="custom-control-label" for="boundsDraw1">Sim</label>
+                      </div>
+                      <div class="custom-control custom-radio custom-control-inline">
+                        <input class="custom-control-input" type="radio" id="boundsDraw2" name="boundsDraw" value="false" [(ngModel)]="mapOptions.clusterOptions.boundsDraw">
+                        <label class="custom-control-label" for="boundsDraw2">Não</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="gridSize" class="col-sm-3 col-form-label">Tamanho da Grid</label>
+                    <input type="number" class="col-sm-4 form-control" id="gridSize" name="gridSize" placeholder="10" [(ngModel)]="mapOptions.clusterOptions.gridSize">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="zoomLevel" class="col-sm-3 col-form-label">Máximo zoom level</label>
+                    <input type="number" class="col-sm-4 form-control" id="zoomLevel" name="zoomLevel" placeholder="18" [(ngModel)]="mapOptions.clusterOptions.maxZoomLevel">
+                  </div>
+                </div>
+              </div>
+
+              <h5>Ícones</h5>
+              <hr class="mt-0">
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="labelColor" class="col-sm-3 col-form-label">Cor</label>
+                    <input type="color" class="col-sm-6 form-control" id="labelColor" name="labelColor" [(ngModel)]="mapOptionsIcons.label.color">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="fontSize" class="col-sm-3 col-form-label">Tamanho da fonte</label>
+                    <input type="number" class="col-sm-6 form-control" id="fontSize" name="fontSize" placeholder="14" [(ngModel)]="mapOptionsIcons.label.fontSize">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="iconMax" class="col-sm-3 col-form-label">Máximo</label>
+                    <input type="number" class="col-sm-6 form-control" id="iconMax" name="iconMax" placeholder="9" [(ngModel)]="mapOptionsIcons.max">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="iconMin" class="col-sm-3 col-form-label">Mínimo</label>
+                    <input type="number" class="col-sm-6 form-control" id="iconMin" name="iconMin" placeholder="5" [(ngModel)]="mapOptionsIcons.min">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="iconUrl" class="col-sm-3 col-form-label">URL</label>
+                    <input type="text" class="col-sm-9 form-control" id="iconUrl" name="iconUrl" placeholder="URL do ícone" [(ngModel)]="mapOptionsIcons.url">
+                  </div>
+                </div>
+              </div>
+
+              <h5>Câmera</h5>
+              <hr class="mt-0">
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="latitude" class="col-sm-3 col-form-label">Latitude</label>
+                    <input type="number" class="col-sm-6 form-control" id="latitude" name="latitude" placeholder="-15.534771" [(ngModel)]="mapOptions.mapOptions.camera.target.lat">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="longitude" class="col-sm-3 col-form-label">Longitude</label>
+                    <input type="number" class="col-sm-6 form-control" id="longitude" name="longitude" placeholder="-54.812171" [(ngModel)]="mapOptions.mapOptions.camera.target.lng">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="tilt" class="col-sm-3 col-form-label">Tilt</label>
+                    <input type="number" class="col-sm-6 form-control" id="tilt" name="tilt" placeholder="30" [(ngModel)]="mapOptions.mapOptions.camera.tilt">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="zoom" class="col-sm-3 col-form-label">Zoom</label>
+                    <input type="number" class="col-sm-6 form-control" id="zoom" name="zoom" placeholder="4" [(ngModel)]="mapOptions.mapOptions.camera.zoom">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="mapType" class="col-sm-3 col-form-label">Tipo de Mapa</label>
+                    <select class="col-sm-6 form-control" id="mapType" name="mapType" [(ngModel)]="mapOptions.mapOptions.mapType">
+                      <option *ngFor="let type of mapTypes" [value]="type">{{type.replace('MAP_TYPE_', '')}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-success">Salvar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

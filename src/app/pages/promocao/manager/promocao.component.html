@@ -1,0 +1,503 @@
+<div *ngIf="showpreloader" class="d-flex justify-content-center align-items-center h-100">
+  <img src="./assets/images/loading.gif" alt="Carregando..." width="100">
+</div>
+<div class="row" [class.d-none]="showpreloader">
+  <div class="col-12 d-flex align-items-stretch grid-margin">
+    <div class="row flex-grow">
+      <div class="col-12 stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-1">Promoção</h4>
+            <p class="card-description">Cadastre uma nova promoção.</p>
+
+            <form class="forms-sample mt-4" name="promocaoForm" #promocaoForm="ngForm" (ngSubmit)="save()">
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="form-group row">
+                    <label for="localNome" class="col-sm-3 col-form-label">Nome do local</label>
+                    <div class="col px-0">
+                      <input type="text" class="form-control" id="localNome" name="localNome" placeholder="Nome do local" required [(ngModel)]="promocao.local.nome" [class.is-invalid]="inputInvalid('localNome')">
+                      <div *ngIf="inputInvalid('localNome')" class="invalid-feedback">
+                        <small class="form-text" *ngIf="inputError('localNome', 'required')">O nome do local é requirido.</small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="input-group">
+                      <input type="file" class="d-none" accept="image/*" #imageFileLocal (change)="onImageLocalFileChange(imageFileLocal.files[0]); imageFileLocal.value = '';">
+                      <label for="imagemLocal" class="col-sm-3 col-form-label">Selecionar uma imagem</label>
+                      <input type="text" class="col form-control" id="imagemLocal" name="imagemLocal" placeholder="Imagem selecionada" readonly required [(ngModel)]="extraControls.imagemLocal.val" [class.is-invalid]="inputInvalid('imagemLocal')" (click)="imageFileLocal.click()">
+                      <div class="input-group-append">
+                        <button class="col btn btn-info" type="button" (click)="imageFileLocal.click()">Selecionar</button>
+                      </div>
+                    </div>
+                    <div *ngIf="inputInvalid('imagemLocal')" class="invalid-feedback d-block offset-sm-3">
+                      <small class="form-text" *ngIf="inputError('imagemLocal', 'required')">A imagem do local é requirida.</small>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 d-flex justify-content-center">
+                  <img *ngIf="extraControls.imagemLocal.src" [src]="extraControls.imagemLocal.src" class="img-fluid img200px" alt="Preview Imagem">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <h4 class="card-title">Promoção</h4>
+                </div>
+                <div class="col-md-8">
+                  <div class="form-group row">
+                    <div class="input-group">
+                      <input type="file" class="d-none" accept="image/*" #imageFile (change)="onImageFileChange(imageFile.files[0]); imageFile.value = '';">
+                      <label for="imagem" class="col-sm-3 col-form-label">Selecionar uma imagem</label>
+                      <input type="text" class="col form-control" id="imagem" name="imagem" placeholder="Imagem selecionada" readonly required [(ngModel)]="extraControls.imagem.val" [class.is-invalid]="inputInvalid('imagem')" (click)="imageFile.click()">
+                      <div class="input-group-append">
+                        <button class="col btn btn-info" type="button" (click)="imageFile.click()">Selecionar</button>
+                      </div>
+                    </div>
+                    <div *ngIf="inputInvalid('imagem')" class="invalid-feedback d-block offset-sm-3">
+                      <small class="form-text" *ngIf="inputError('imagem', 'required')">A imagem da promoção é requirida.</small>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label for="titulo" class="col-sm-3 col-form-label">Titulo</label>
+                    <div class="col px-0">
+                      <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Titulo" required [(ngModel)]="promocao.titulo" [class.is-invalid]="inputInvalid('titulo')">
+                      <div *ngIf="inputInvalid('titulo')" class="invalid-feedback">
+                        <small class="form-text" *ngIf="inputError('titulo', 'required')">O titulo da promoção é requirido.</small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label for="descricao" class="col-sm-3 col-form-label">Descrição</label>
+                    <div class="col px-0">
+                      <textarea class="form-control" id="descricao" name="descricao" rows="3" placeholder="Aqui vai um texto descritivo da promoção." required [(ngModel)]="promocao.descricao" [class.is-invalid]="inputInvalid('descricao')"></textarea>
+                      <div *ngIf="inputInvalid('descricao')" class="invalid-feedback">
+                        <small class="form-text" *ngIf="inputError('descricao', 'required')">A decrição da promoção é requirida.</small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label for="regra" class="col-sm-3 col-form-label">Regras</label>
+                    <div class="col px-0">
+                      <textarea class="form-control" id="regra" name="regra" rows="3" placeholder="Aqui vai um texto descritivo sobre as regras da promoção." required [(ngModel)]="promocao.regra" [class.is-invalid]="inputInvalid('regra')"></textarea>
+                      <div *ngIf="inputInvalid('regra')" class="invalid-feedback">
+                        <small class="form-text" *ngIf="inputError('regra', 'required')">A decrição da promoção é requirida.</small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label for="dataValidade" class="col-sm-3 col-form-label">Data de Validade</label>
+                    <div class="col-6 px-0">
+                      <input type="date" class="form-control" id="dataValidade" name="dataValidade" [min]="extraControls.dataValidade.min" required [(ngModel)]="extraControls.dataValidade.val" [class.is-invalid]="inputInvalid('dataValidade')">
+                      <div *ngIf="inputInvalid('dataValidade')" class="invalid-feedback">
+                        <small class="form-text" *ngIf="inputError('dataValidade', 'required')">A data de validade da promoção é requirido.</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 d-flex justify-content-center">
+                  <img *ngIf="extraControls.imagem.src" [src]="extraControls.imagem.src" class="img-fluid img200px" alt="Preview Imagem">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <h4 class="card-title">Horários</h4>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Segunda - Turno 01</label>
+                    <div class="col-sm-8">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <select class="form-control" id="segundaTurno1Input1" name="segundaTurno1Input1" [(ngModel)]="this.promocao.horarios.segunda.turno1.inicio" [class.is-invalid]="inputInvalid('segundaTurno1Input1')" (blur)="inputTouch('segundaTurno1Input1')" (change)="onInputChange('segundaTurno1Input1', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-6">
+                          <select class="form-control" id="segundaTurno1Input2" name="segundaTurno1Input2" [(ngModel)]="this.promocao.horarios.segunda.turno1.fim" [class.is-invalid]="inputInvalid('segundaTurno1Input2')" (blur)="inputTouch('segundaTurno1Input2')" (change)="onInputChange('segundaTurno1Input2', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-12 justify-content-end d-flex mt-1">
+                          <button type="button" class="btn btn-primary btn-sm p-1 btn-replicar" (click)="replicarHorarios()">Replicar</button>
+                        </div>
+                        <div *ngIf="inputInvalid('segundaTurno1Input1') || inputInvalid('segundaTurno1Input2')" class="invalid-feedback d-block col-sm-12">
+                          <small class="form-text" *ngIf="inputError('segundaTurno1Input1', 'required')">Selecione o primeiro horário.</small>
+                          <small class="form-text" *ngIf="inputError('segundaTurno1Input2', 'required')">Selecione o segundo horário.</small>
+                          <small class="form-text" *ngIf="inputError('segundaTurno1Input2', 'repeatedValue')">O segundo horário não pode ser igual ao primeiro.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Segunda - Turno 02</label>
+                    <div class="col-sm-8">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <select class="form-control" id="segundaTurno2Input1" name="segundaTurno2Input1" [(ngModel)]="this.promocao.horarios.segunda.turno2.inicio" [class.is-invalid]="inputInvalid('segundaTurno2Input1')" (blur)="inputTouch('segundaTurno2Input1')" (change)="onInputChange('segundaTurno2Input1', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-6">
+                          <select class="form-control" id="segundaTurno2Input2" name="segundaTurno2Input2" [(ngModel)]="this.promocao.horarios.segunda.turno2.fim" [class.is-invalid]="inputInvalid('segundaTurno2Input2')" (blur)="inputTouch('segundaTurno2Input2')" (change)="onInputChange('segundaTurno2Input2', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div *ngIf="inputInvalid('segundaTurno2Input1') || inputInvalid('segundaTurno2Input2')" class="invalid-feedback d-block col-sm-12">
+                          <small class="form-text" *ngIf="inputError('segundaTurno2Input1', 'required')">Selecione o primeiro horário.</small>
+                          <small class="form-text" *ngIf="inputError('segundaTurno2Input2', 'required')">Selecione o segundo horário.</small>
+                          <small class="form-text" *ngIf="inputError('segundaTurno2Input2', 'repeatedValue')">O segundo horário não pode ser igual ao primeiro.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Terça - Turno 01</label>
+                    <div class="col-sm-8">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <select class="form-control" id="tercaTurno1Input1" name="tercaTurno1Input1" [(ngModel)]="this.promocao.horarios.terca.turno1.inicio" [class.is-invalid]="inputInvalid('tercaTurno1Input1')" (blur)="inputTouch('tercaTurno1Input1')" (change)="onInputChange('tercaTurno1Input1', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-6">
+                          <select class="form-control" id="tercaTurno1Input2" name="tercaTurno1Input2" [(ngModel)]="this.promocao.horarios.terca.turno1.fim" [class.is-invalid]="inputInvalid('tercaTurno1Input2')" (blur)="inputTouch('tercaTurno1Input2')" (change)="onInputChange('tercaTurno1Input2', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div *ngIf="inputInvalid('tercaTurno1Input1') || inputInvalid('tercaTurno1Input2')" class="invalid-feedback d-block col-sm-12">
+                          <small class="form-text" *ngIf="inputError('tercaTurno1Input1', 'required')">Selecione o primeiro horário.</small>
+                          <small class="form-text" *ngIf="inputError('tercaTurno1Input2', 'required')">Selecione o segundo horário.</small>
+                          <small class="form-text" *ngIf="inputError('tercaTurno1Input2', 'repeatedValue')">O segundo horário não pode ser igual ao primeiro.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Terça - Turno 02</label>
+                    <div class="col-sm-8">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <select class="form-control" id="tercaTurno2Input1" name="tercaTurno2Input1" [(ngModel)]="this.promocao.horarios.terca.turno2.inicio" [class.is-invalid]="inputInvalid('tercaTurno2Input1')" (blur)="inputTouch('tercaTurno2Input1')" (change)="onInputChange('tercaTurno2Input1', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-6">
+                          <select class="form-control" id="tercaTurno2Input2" name="tercaTurno2Input2" [(ngModel)]="this.promocao.horarios.terca.turno2.fim" [class.is-invalid]="inputInvalid('tercaTurno2Input2')" (blur)="inputTouch('tercaTurno2Input2')" (change)="onInputChange('tercaTurno2Input2', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div *ngIf="inputInvalid('tercaTurno2Input1') || inputInvalid('tercaTurno2Input2')" class="invalid-feedback d-block col-sm-12">
+                          <small class="form-text" *ngIf="inputError('tercaTurno2Input1', 'required')">Selecione o primeiro horário.</small>
+                          <small class="form-text" *ngIf="inputError('tercaTurno2Input2', 'required')">Selecione o segundo horário.</small>
+                          <small class="form-text" *ngIf="inputError('tercaTurno2Input2', 'repeatedValue')">O segundo horário não pode ser igual ao primeiro.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Quarta - Turno 01</label>
+                    <div class="col-sm-8">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <select class="form-control" id="quartaTurno1Input1" name="quartaTurno1Input1" [(ngModel)]="this.promocao.horarios.quarta.turno1.inicio" [class.is-invalid]="inputInvalid('quartaTurno1Input1')" (blur)="inputTouch('quartaTurno1Input1')" (change)="onInputChange('quartaTurno1Input1', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-6">
+                          <select class="form-control" id="quartaTurno1Input2" name="quartaTurno1Input2" [(ngModel)]="this.promocao.horarios.quarta.turno1.fim" [class.is-invalid]="inputInvalid('quartaTurno1Input2')" (blur)="inputTouch('quartaTurno1Input2')" (change)="onInputChange('quartaTurno1Input2', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div *ngIf="inputInvalid('quartaTurno1Input1') || inputInvalid('quartaTurno1Input2')" class="invalid-feedback d-block col-sm-12">
+                          <small class="form-text" *ngIf="inputError('quartaTurno1Input1', 'required')">Selecione o primeiro horário.</small>
+                          <small class="form-text" *ngIf="inputError('quartaTurno1Input2', 'required')">Selecione o segundo horário.</small>
+                          <small class="form-text" *ngIf="inputError('quartaTurno1Input2', 'repeatedValue')">O segundo horário não pode ser igual ao primeiro.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Quarta - Turno 02</label>
+                    <div class="col-sm-8">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <select class="form-control" id="quartaTurno2Input1" name="quartaTurno2Input1" [(ngModel)]="this.promocao.horarios.quarta.turno2.inicio" [class.is-invalid]="inputInvalid('quartaTurno2Input1')" (blur)="inputTouch('quartaTurno2Input1')" (change)="onInputChange('quartaTurno2Input1', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-6">
+                          <select class="form-control" id="quartaTurno2Input2" name="quartaTurno2Input2" [(ngModel)]="this.promocao.horarios.quarta.turno2.fim" [class.is-invalid]="inputInvalid('quartaTurno2Input2')" (blur)="inputTouch('quartaTurno2Input2')" (change)="onInputChange('quartaTurno2Input2', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div *ngIf="inputInvalid('quartaTurno2Input1') || inputInvalid('quartaTurno2Input2')" class="invalid-feedback d-block col-sm-12">
+                          <small class="form-text" *ngIf="inputError('quartaTurno2Input1', 'required')">Selecione o primeiro horário.</small>
+                          <small class="form-text" *ngIf="inputError('quartaTurno2Input2', 'required')">Selecione o segundo horário.</small>
+                          <small class="form-text" *ngIf="inputError('quartaTurno2Input2', 'repeatedValue')">O segundo horário não pode ser igual ao primeiro.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Quinta - Turno 01</label>
+                    <div class="col-sm-8">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <select class="form-control" id="quintaTurno1Input1" name="quintaTurno1Input1" [(ngModel)]="this.promocao.horarios.quinta.turno1.inicio" [class.is-invalid]="inputInvalid('quintaTurno1Input1')" (blur)="inputTouch('quintaTurno1Input1')" (change)="onInputChange('quintaTurno1Input1', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-6">
+                          <select class="form-control" id="quintaTurno1Input2" name="quintaTurno1Input2" [(ngModel)]="this.promocao.horarios.quinta.turno1.fim" [class.is-invalid]="inputInvalid('quintaTurno1Input2')" (blur)="inputTouch('quintaTurno1Input2')" (change)="onInputChange('quintaTurno1Input2', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div *ngIf="inputInvalid('quintaTurno1Input1') || inputInvalid('quintaTurno1Input2')" class="invalid-feedback d-block col-sm-12">
+                          <small class="form-text" *ngIf="inputError('quintaTurno1Input1', 'required')">Selecione o primeiro horário.</small>
+                          <small class="form-text" *ngIf="inputError('quintaTurno1Input2', 'required')">Selecione o segundo horário.</small>
+                          <small class="form-text" *ngIf="inputError('quintaTurno1Input2', 'repeatedValue')">O segundo horário não pode ser igual ao primeiro.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Quinta - Turno 02</label>
+                    <div class="col-sm-8">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <select class="form-control" id="quintaTurno2Input1" name="quintaTurno2Input1" [(ngModel)]="this.promocao.horarios.quinta.turno2.inicio" [class.is-invalid]="inputInvalid('quintaTurno2Input1')" (blur)="inputTouch('quintaTurno2Input1')" (change)="onInputChange('quintaTurno2Input1', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-6">
+                          <select class="form-control" id="quintaTurno2Input2" name="quintaTurno2Input2" [(ngModel)]="this.promocao.horarios.quinta.turno2.fim" [class.is-invalid]="inputInvalid('quintaTurno2Input2')" (blur)="inputTouch('quintaTurno2Input2')" (change)="onInputChange('quintaTurno2Input2', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div *ngIf="inputInvalid('quintaTurno2Input1') || inputInvalid('quintaTurno2Input2')" class="invalid-feedback d-block col-sm-12">
+                          <small class="form-text" *ngIf="inputError('quintaTurno2Input1', 'required')">Selecione o primeiro horário.</small>
+                          <small class="form-text" *ngIf="inputError('quintaTurno2Input2', 'required')">Selecione o segundo horário.</small>
+                          <small class="form-text" *ngIf="inputError('quintaTurno2Input2', 'repeatedValue')">O segundo horário não pode ser igual ao primeiro.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Sexta - Turno 01</label>
+                    <div class="col-sm-8">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <select class="form-control" id="sextaTurno1Input1" name="sextaTurno1Input1" [(ngModel)]="this.promocao.horarios.sexta.turno1.inicio" [class.is-invalid]="inputInvalid('sextaTurno1Input1')" (blur)="inputTouch('sextaTurno1Input1')" (change)="onInputChange('sextaTurno1Input1', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-6">
+                          <select class="form-control" id="sextaTurno1Input2" name="sextaTurno1Input2" [(ngModel)]="this.promocao.horarios.sexta.turno1.fim" [class.is-invalid]="inputInvalid('sextaTurno1Input2')" (blur)="inputTouch('sextaTurno1Input2')" (change)="onInputChange('sextaTurno1Input2', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div *ngIf="inputInvalid('sextaTurno1Input1') || inputInvalid('sextaTurno1Input2')" class="invalid-feedback d-block col-sm-12">
+                          <small class="form-text" *ngIf="inputError('sextaTurno1Input1', 'required')">Selecione o primeiro horário.</small>
+                          <small class="form-text" *ngIf="inputError('sextaTurno1Input2', 'required')">Selecione o segundo horário.</small>
+                          <small class="form-text" *ngIf="inputError('sextaTurno1Input2', 'repeatedValue')">O segundo horário não pode ser igual ao primeiro.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Sexta - Turno 02</label>
+                    <div class="col-sm-8">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <select class="form-control" id="sextaTurno2Input1" name="sextaTurno2Input1" [(ngModel)]="this.promocao.horarios.sexta.turno2.inicio" [class.is-invalid]="inputInvalid('sextaTurno2Input1')" (blur)="inputTouch('sextaTurno2Input1')" (change)="onInputChange('sextaTurno2Input1', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-6">
+                          <select class="form-control" id="sextaTurno2Input2" name="sextaTurno2Input2" [(ngModel)]="this.promocao.horarios.sexta.turno2.fim" [class.is-invalid]="inputInvalid('sextaTurno2Input2')" (blur)="inputTouch('sextaTurno2Input2')" (change)="onInputChange('sextaTurno2Input2', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div *ngIf="inputInvalid('sextaTurno2Input1') || inputInvalid('sextaTurno2Input2')" class="invalid-feedback d-block col-sm-12">
+                          <small class="form-text" *ngIf="inputError('sextaTurno2Input1', 'required')">Selecione o primeiro horário.</small>
+                          <small class="form-text" *ngIf="inputError('sextaTurno2Input2', 'required')">Selecione o segundo horário.</small>
+                          <small class="form-text" *ngIf="inputError('sextaTurno2Input2', 'repeatedValue')">O segundo horário não pode ser igual ao primeiro.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Sábado - Turno 01</label>
+                    <div class="col-sm-8">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <select class="form-control" id="sabadoTurno1Input1" name="sabadoTurno1Input1" [(ngModel)]="this.promocao.horarios.sabado.turno1.inicio" [class.is-invalid]="inputInvalid('sabadoTurno1Input1')" (blur)="inputTouch('sabadoTurno1Input1')" (change)="onInputChange('sabadoTurno1Input1', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-6">
+                          <select class="form-control" id="sabadoTurno1Input2" name="sabadoTurno1Input2" [(ngModel)]="this.promocao.horarios.sabado.turno1.fim" [class.is-invalid]="inputInvalid('sabadoTurno1Input2')" (blur)="inputTouch('sabadoTurno1Input2')" (change)="onInputChange('sabadoTurno1Input2', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div *ngIf="inputInvalid('sabadoTurno1Input1') || inputInvalid('sabadoTurno1Input2')" class="invalid-feedback d-block col-sm-12">
+                          <small class="form-text" *ngIf="inputError('sabadoTurno1Input1', 'required')">Selecione o primeiro horário.</small>
+                          <small class="form-text" *ngIf="inputError('sabadoTurno1Input2', 'required')">Selecione o segundo horário.</small>
+                          <small class="form-text" *ngIf="inputError('sabadoTurno1Input2', 'repeatedValue')">O segundo horário não pode ser igual ao primeiro.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Sábado - Turno 02</label>
+                    <div class="col-sm-8">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <select class="form-control" id="sabadoTurno2Input1" name="sabadoTurno2Input1" [(ngModel)]="this.promocao.horarios.sabado.turno2.inicio" [class.is-invalid]="inputInvalid('sabadoTurno2Input1')" (blur)="inputTouch('sabadoTurno2Input1')" (change)="onInputChange('sabadoTurno2Input1', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-6">
+                          <select class="form-control" id="sabadoTurno2Input2" name="sabadoTurno2Input2" [(ngModel)]="this.promocao.horarios.sabado.turno2.fim" [class.is-invalid]="inputInvalid('sabadoTurno2Input2')" (blur)="inputTouch('sabadoTurno2Input2')" (change)="onInputChange('sabadoTurno2Input2', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div *ngIf="inputInvalid('sabadoTurno2Input1') || inputInvalid('sabadoTurno2Input2')" class="invalid-feedback d-block col-sm-12">
+                          <small class="form-text" *ngIf="inputError('sabadoTurno2Input1', 'required')">Selecione o primeiro horário.</small>
+                          <small class="form-text" *ngIf="inputError('sabadoTurno2Input2', 'required')">Selecione o segundo horário.</small>
+                          <small class="form-text" *ngIf="inputError('sabadoTurno2Input2', 'repeatedValue')">O segundo horário não pode ser igual ao primeiro.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Domingo - Turno 01</label>
+                    <div class="col-sm-8">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <select class="form-control" id="domingoTurno1Input1" name="domingoTurno1Input1" [(ngModel)]="this.promocao.horarios.domingo.turno1.inicio" [class.is-invalid]="inputInvalid('domingoTurno1Input1')" (blur)="inputTouch('domingoTurno1Input1')" (change)="onInputChange('domingoTurno1Input1', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-6">
+                          <select class="form-control" id="domingoTurno1Input2" name="domingoTurno1Input2" [(ngModel)]="this.promocao.horarios.domingo.turno1.fim" [class.is-invalid]="inputInvalid('domingoTurno1Input2')" (blur)="inputTouch('domingoTurno1Input2')" (change)="onInputChange('domingoTurno1Input2', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div *ngIf="inputInvalid('domingoTurno1Input1') || inputInvalid('domingoTurno1Input2')" class="invalid-feedback d-block col-sm-12">
+                          <small class="form-text" *ngIf="inputError('domingoTurno1Input1', 'required')">Selecione o primeiro horário.</small>
+                          <small class="form-text" *ngIf="inputError('domingoTurno1Input2', 'required')">Selecione o segundo horário.</small>
+                          <small class="form-text" *ngIf="inputError('domingoTurno1Input2', 'repeatedValue')">O segundo horário não pode ser igual ao primeiro.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Domingo - Turno 02</label>
+                    <div class="col-sm-8">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <select class="form-control" id="domingoTurno2Input1" name="domingoTurno2Input1" [(ngModel)]="this.promocao.horarios.domingo.turno2.inicio" [class.is-invalid]="inputInvalid('domingoTurno2Input1')" (blur)="inputTouch('domingoTurno2Input1')" (change)="onInputChange('domingoTurno2Input1', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-6">
+                          <select class="form-control" id="domingoTurno2Input2" name="domingoTurno2Input2" [(ngModel)]="this.promocao.horarios.domingo.turno2.fim" [class.is-invalid]="inputInvalid('domingoTurno2Input2')" (blur)="inputTouch('domingoTurno2Input2')" (change)="onInputChange('domingoTurno2Input2', $event.target.value)">
+                            <option value="">Selecione...</option>
+                            <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                          </select>
+                        </div>
+                        <div *ngIf="inputInvalid('domingoTurno2Input1') || inputInvalid('domingoTurno2Input2')" class="invalid-feedback d-block col-sm-12">
+                          <small class="form-text" *ngIf="inputError('domingoTurno2Input1', 'required')">Selecione o primeiro horário.</small>
+                          <small class="form-text" *ngIf="inputError('domingoTurno2Input2', 'required')">Selecione o segundo horário.</small>
+                          <small class="form-text" *ngIf="inputError('domingoTurno2Input2', 'repeatedValue')">O segundo horário não pode ser igual ao primeiro.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-success">Salvar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

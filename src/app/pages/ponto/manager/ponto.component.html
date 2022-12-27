@@ -1,0 +1,1441 @@
+<div *ngIf="showpreloader" class="d-flex justify-content-center align-items-center h-100">
+  <img src="./assets/images/loading.gif" alt="Carregando..." width="100">
+</div>
+<div *ngIf="!showpreloader" class="row">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Estabelecimento</h4>
+        <!-- <p class="card-description">Use class <code>.tab-solid</code> with <code>.tab-solid-*</code> for solid styled tab</p> -->
+        <ngb-tabset activeIds="ngb-panel-2" class="tab-solid tab-solid-primary">
+          <ngb-tab>
+            <ng-template ngbTabTitle>
+              <i class="mdi mdi-home-outline"></i>Principal
+            </ng-template>
+            <ng-template ngbTabContent>
+              <div class="row" [class.d-none]="showpreloader">
+                <div class="col-12 grid-margin">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">
+                        <span *ngIf="ponto != null">Editando</span><span *ngIf="ponto == null">Adicionar Novo</span>
+                        Estabelecimento
+                      </h4>
+                      <form class="form-sample" [formGroup]="form" (ngSubmit)="onSubmit()">
+                        <div class="row" *ngIf="usuario && usuario.cargo == 'Admin'">
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontoStatus">Status</label>
+                              <div class="col-sm-9">
+                                <select class="form-control" id="pontoStatus" formControlName="status"
+                                  [ngClass]="{ 'is-invalid': submitted && f.status.errors }"
+                                  (change)="onStatusChange($event.target.value)">
+                                  <option value="0">Inativo</option>
+                                  <option value="1">Ativo</option>
+                                  <option value="2">Em Teste</option>
+                                  <option value="3">Atrasado</option>
+                                  <option value="4">Pré Cadastro</option>
+                                </select>
+                                <div *ngIf="submitted && f.status.errors">
+                                  <small class="form-text text-danger" *ngIf="f.status.errors.required">O status é
+                                    requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6" *ngIf="showdatetest">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontovencimentoTesteData">Vencimento do
+                                Teste</label>
+                              <div class="col-sm-9">
+                                <input type="date" id="pontovencimentoTesteData" formControlName="vencimentoTesteData"
+                                  class="form-control" placeholder="Nome do Local"
+                                  [ngClass]="{ 'is-invalid': submitted && inValidValidadeTestData }"
+                                  (change)="onVencimentoTesteDataChange($event.target.value)">
+                                <div *ngIf="submitted && inValidValidadeTestData" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="inValidValidadeTestData">A data final do teste é
+                                    requirida, ou não é
+                                    valida.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontonome">Nome</label>
+                              <div class="col-sm-9">
+                                <input type="text" id="pontonome" text-uppercase formControlName="nome"
+                                  class="form-control" placeholder="Nome do Local"
+                                  [ngClass]="{ 'is-invalid': submitted && f.nome.errors }">
+                                <div *ngIf="submitted && f.nome.errors" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.nome.errors.required">O nome é requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontoemail">Email</label>
+                              <div class="col-sm-9">
+                                <input type="email" id="pontoemail" formControlName="email" class="form-control"
+                                  placeholder="Email do Local"
+                                  [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+                                <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.email.errors.required">O email é requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontofraseEfeito">Frase de Efeito</label>
+                              <div class="col-sm-9">
+                                <input type="text" id="pontofraseEfeito" formControlName="fraseEfeito"
+                                  class="form-control" placeholder="Frase de Impacto"
+                                  [ngClass]="{ 'is-invalid': submitted && f.fraseEfeito.errors }">
+                                <div *ngIf="submitted && f.fraseEfeito.errors" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.fraseEfeito.errors.required">A frase de efeito é
+                                    requirida.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontonomeResponsavel">Responsável</label>
+                              <div class="col-sm-9">
+                                <input class="form-control" text-uppercase id="pontonomeResponsavel"
+                                  formControlName="nomeResponsavel" placeholder="Nome do Responsável"
+                                  [ngClass]="{ 'is-invalid': submitted && f.nomeResponsavel.errors }">
+                                <div *ngIf="submitted && f.nomeResponsavel.errors" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.nomeResponsavel.errors.required">O responsável é
+                                    requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label">Categoria</label>
+                              <div class="col-sm-9">
+                                <ng-select [items]="icategorias$1 | async" [multiple]="true" [closeOnSelect]="false"
+                                  [searchable]="false" bindLabel="nome" placeholder="Selecione..."
+                                  formControlName="categoria"
+                                  [class.ng-in-valid]="submitted && f.categoria.errors">
+                                </ng-select>
+                                <div *ngIf="submitted && f.categoria.errors">
+                                  <small class="form-text text-danger" *ngIf="f.categoria.errors.required">A categoria é
+                                    requirida.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontotelefoneRepresentante">Telefone</label>
+                              <div class="col-sm-9">
+                                <input class="form-control" id="pontotelefoneRepresentante" maxlength="14"
+                                  formControlName="telefoneRepresentante" placeholder="(00)0000-0000"
+                                  [ngClass]="{ 'is-invalid': submitted && f.telefoneRepresentante.errors }">
+                                <div *ngIf="submitted && f.telefoneRepresentante.errors" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.telefoneRepresentante.errors.required">O telefone é
+                                    requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontoRepresentante">Representante</label>
+                              <div class="col-sm-9">
+                                <select *ngIf="usuario && usuario.cargo == 'Admin'" class="form-control"
+                                  id="pontoRepresentante" formControlName="representante">
+                                  <option value="">Selecione...</option>
+                                  <option *ngFor="let user of iusers" [value]="user.uid">{{user.nomeCompleto}}</option>
+                                </select>
+                                <select *ngIf="usuario && usuario.cargo != 'Admin'" disabled [value]="usuario.id"
+                                  class="form-control" id="pontoRepresentante" formControlName="representante">
+                                  <option [value]="usuario.id">{{usuario.nomeCompleto}}</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontoDescobriu">Descobriu</label>
+                              <div class="col-sm-9">
+                                <select *ngIf="usuario && usuario.cargo == 'Admin'" class="form-control"
+                                  id="pontoDescobriu" formControlName="descobriu">
+                                  <option value="">Selecione...</option>
+                                  <option *ngFor="let user of idescobriu" [value]="user.id">{{user.nome}}</option>
+                                </select>
+                                <select *ngIf="usuario && usuario.cargo != 'Admin'" disabled [value]="usuario.id"
+                                  class="form-control" id="pontoDescobriu" formControlName="descobriu">
+                                  <option [value]="usuario.id">{{usuario.nomeCompleto}}</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="codigoPromocional">Codigo Promocional</label>
+                              <div class="col-sm-9">
+                                <input class="form-control" id="codigoPromocional" formControlName="codigoPromocional"
+                                  placeholder="Codigo Promocional" autocomplete="off">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="tipoContato">Receber contato</label>
+                              <div class="col-sm-9">
+                                <select class="form-control" id="tipoContato" formControlName="tipoContato"
+                                  [ngClass]="{ 'is-invalid': submitted && f.tipoContato.errors }"
+                                  (change)="onStatusChange($event.target.value)">
+                                  <option value="whatsapp">WhatsApp</option>
+                                  <option value="telefone">Telefone</option>
+                                  <option value="email">E-mail</option>
+                                </select>
+                                <div *ngIf="submitted && f.tipoContato.errors">
+                                  <small class="form-text text-danger" *ngIf="f.tipoContato.errors.required">O tipo de
+                                    contato é
+                                    requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row col-md-12">
+                          <div class="col-md-3">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" no-padding style="margin-top:4px;">Wi-Fi</label>
+                              <div class="col-sm-9">
+                                <div class="custom-control custom-radio">
+                                  <input class="custom-control-input" type="radio" id="wifi1" name="wifi" value="true"
+                                    formControlName="wifi" checked>
+                                  <label class="custom-control-label" for="wifi1">Sim</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                  <input class="custom-control-input" type="radio" id="wifi2" name="wifi" value="false"
+                                    formControlName="wifi">
+                                  <label class="custom-control-label" for="wifi2">Não</label>
+                                </div>
+
+                                <div *ngIf="submitted && f.wifi.errors" class="invalid-feedback d-block">
+                                  <small class="form-text" *ngIf="f.wifi.errors.required">Campo é requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" no-padding style="margin-top:4px;">Banheiro</label>
+                              <div class="col-sm-9">
+                                <div class="custom-control custom-radio">
+                                  <input class="custom-control-input" type="radio" id="banheiro1" name="banheiro"
+                                    value="true" formControlName="banheiro" checked>
+                                  <label class="custom-control-label" for="banheiro1">Sim</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                  <input class="custom-control-input" type="radio" id="banheiro2" name="banheiro"
+                                    value="false" formControlName="banheiro">
+                                  <label class="custom-control-label" for="banheiro2">Não</label>
+                                </div>
+
+                                <div *ngIf="submitted && f.banheiro.errors" class="invalid-feedback d-block">
+                                  <small class="form-text" *ngIf="f.banheiro.errors.required">Campo é requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" no-padding style="margin-top:4px;">Plano</label>
+                              <div class="col-sm-9">
+                                <div class="custom-control custom-radio" *ngFor="let plano of iplanos; let i = index">
+                                  <input class="custom-control-input" type="radio" id="plano{{i}}" name="plano"
+                                    [value]="plano.uid" formControlName="plano">
+                                  <label class="custom-control-label" for="plano{{i}}">{{plano.nome}}</label>
+                                </div>
+                                <div *ngIf="submitted && f.plano.errors" class="invalid-feedback d-block">
+                                  <small class="form-text" *ngIf="f.plano.errors.required">Campo é requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" no-padding style="margin-top:4px;">Privado</label>
+                              <div class="col-sm-9">
+                                <div class="custom-control custom-radio">
+                                  <input class="custom-control-input" type="radio" id="privado1" name="privado"
+                                    value="true" formControlName="privado">
+                                  <label class="custom-control-label" for="privado1">Sim</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                  <input class="custom-control-input" type="radio" id="privado2" name="privado"
+                                    value="false" formControlName="privado">
+                                  <label class="custom-control-label" for="privado2">Não</label>
+                                </div>
+
+                                <div *ngIf="submitted && f.privado.errors" class="invalid-feedback d-block">
+                                  <small class="form-text" *ngIf="f.privado.errors.required">Campo é requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                        <h4 class="card-title">Endereço do Local</h4>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontocep">CEP</label>
+                              <div class="col-sm-5">
+                                <input type="text" id="pontocep" formControlName="cep" class="form-control"
+                                  placeholder="00.000-000"
+                                  [ngClass]="{ 'is-invalid': (submitted || submittedcep) && !f.cep.valid }"
+                                  (blur)="consultaCep()">
+                                <div *ngIf="(submitted || submittedcep) && !f.cep.valid" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.cep.errors.required">O cep é requirido.</small>
+                                  <small class="form-text" *ngIf="f.cep.errors.minlength">Minimo de 8
+                                    caracteres.</small>
+                                </div>
+                              </div>
+                              <div class="col-sm-4">
+                                <button class="file-upload-browse btn btn-info" type="button"
+                                  (click)="consultaCep()">Consultar
+                                  CEP</button>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontologradouro">Endereço</label>
+                              <div class="col-sm-9">
+                                <input type="text" id="pontologradouro" formControlName="logradouro"
+                                  class="form-control" [ngClass]="{ 'is-invalid': submitted && f.logradouro.errors }">
+                                <div *ngIf="submitted && f.logradouro.errors" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.logradouro.errors.required">O endereço é
+                                    requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontonumero">Número</label>
+                              <div class="col-sm-9">
+                                <input type="number" id="pontonumero" formControlName="numero" class="form-control"
+                                  [ngClass]="{ 'is-invalid': submitted && f.numero.errors }" (blur)="consultaGeo()">
+                                <div *ngIf="submitted && f.numero.errors" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.numero.errors.required">O número é
+                                    requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontobairro">Bairro</label>
+                              <div class="col-sm-9">
+                                <input type="text" id="pontobairro" formControlName="bairro" class="form-control"
+                                  [ngClass]="{ 'is-invalid': submitted && f.bairro.errors }">
+                                <div *ngIf="submitted && f.bairro.errors" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.bairro.errors.required">O bairro é
+                                    requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontocidade">Cidade</label>
+                              <div class="col-sm-9">
+                                <input type="text" id="pontocidade" formControlName="cidade" class="form-control"
+                                  [ngClass]="{ 'is-invalid': submitted && f.cidade.errors }">
+                                <div *ngIf="submitted && f.cidade.errors" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.cidade.errors.required">A cidade é
+                                    requirida.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontoestado">Estado</label>
+                              <div class="col-sm-9">
+                                <input type="text" id="pontoestado" formControlName="estado" class="form-control"
+                                  [ngClass]="{ 'is-invalid': submitted && f.estado.errors }">
+                                <div *ngIf="submitted && f.estado.errors" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.estado.errors.required">O estado é
+                                    requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontolatitude">Latitude</label>
+                              <div class="col-sm-9">
+                                <input type="nember" id="pontolatitude" formControlName="latitude" class="form-control"
+                                  [ngClass]="{ 'is-invalid': submitted && f.latitude.errors }">
+                                <div *ngIf="submitted && f.latitude.errors" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.latitude.errors.required">A latitude é
+                                    requirida.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontolongitude">Longitude</label>
+                              <div class="col-sm-9">
+                                <input type="number" id="pontolongitude" formControlName="longitude"
+                                  class="form-control" [ngClass]="{ 'is-invalid': submitted && f.longitude.errors }">
+                                <div *ngIf="submitted && f.longitude.errors" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.longitude.errors.required">A longitude é
+                                    requirida.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <h4 class="card-title">Custo Carregamento</h4>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="form-group row">
+                              <label class="col-sm-1 col-form-label" for="pontocliente">Cliente</label>
+                              <div class="col-sm-11">
+                                <ng-select id="pontocliente"
+                                  [items]='custoCarregamentos'
+                                  [multiple]="true" [closeOnSelect]="false" [searchable]="false" bindLabel="nome"
+                                  placeholder="Selecione..." formControlName="custoCarregamentoCliente"
+                                  [class.ng-in-valid]="submitted && f.custoCarregamentoCliente.errors">
+                                </ng-select>
+                                <!-- <ng-select id="pontocliente"
+                                [items]='[ {"nome": "Venha nos conhecer e carregue gratuitamente" },
+                                    {"nome": "Faça o check-in no local" },  {"nome": "Consumação mínima R$ 2,00" },  {"nome": "Consumação mínima R$ 5,00" },  {"nome": "Consumação mínima R$ 10,00" }]'
+                                [multiple]="true" [closeOnSelect]="false" [searchable]="false" bindLabel="nome"
+                                placeholder="Selecione..." formControlName="custoCarregamentoCliente"
+                                [class.ng-in-valid]="submitted && f.custoCarregamentoCliente.errors">
+                              </ng-select> -->
+                                <div *ngIf="submitted && f.custoCarregamentoCliente.errors">
+                                  <small class="form-text text-danger"
+                                    *ngIf="f.custoCarregamentoCliente.errors.required">O custo carregamento do cliente é requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <h4 class="card-title">Informações Adicionais</h4>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontofacebook">Facebook</label>
+                              <div class="col-sm-9">
+                                <input type="text" id="pontofacebook" formControlName="facebook" class="form-control"
+                                  placeholder="http://facebook.com/nomedolocal"
+                                  [ngClass]="{ 'is-invalid': submitted && f.facebook.errors }">
+                                <div *ngIf="submitted && f.facebook.errors" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.facebook.errors.required">O facebook é
+                                    requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontoinstagram">Instagram</label>
+                              <div class="col-sm-9">
+                                <div *ngIf="imagenspreview.insta.show" class="imageninstagram">
+                                  <img [src]="imagenspreview.insta.src" alt="" class="rounded-circle" height="34"
+                                    width="34">
+                                </div>
+                                <div class="imageninstagram imagemloaderinsta" *ngIf="imagenspreview.insta.loader">
+                                  <i class="fa fa-spinner fa-spin"></i>
+                                </div>
+                                <div class="imageninstagram imagemloaderinsta" *ngIf="imagenspreview.insta.error">
+                                  <i class="fa fa-times" style="color:#d43c3c"></i>
+                                </div>
+                                <input type="text" id="pontoinstagram" formControlName="instagram" class="form-control"
+                                  placeholder="http://instagram.com/nickname"
+                                  [ngClass]="{ 'is-invalid': submitted && f.instagram.errors }"
+                                  (blur)="blurImageInstagram()">
+                                <div *ngIf="submitted && f.instagram.errors" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.instagram.errors.required">O instagram é
+                                    requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontosite">Site</label>
+                              <div class="col-sm-9">
+                                <input type="text" id="pontosite" formControlName="site" class="form-control"
+                                  placeholder="http://nomedolocal.com.br"
+                                  [ngClass]="{ 'is-invalid': submitted && f.site.errors }">
+                                <div *ngIf="submitted && f.site.errors" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.site.errors.required">O site é requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontotelefone">Telefone</label>
+                              <div class="col-sm-9">
+                                <input type="text" id="pontotelefone" formControlName="telefone" class="form-control"
+                                  placeholder="(00)0000-0000"
+                                  [ngClass]="{ 'is-invalid': submitted && f.telefone.errors }">
+                                <div *ngIf="submitted && f.telefone.errors" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.telefone.errors.required">O telefone é
+                                    requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontowhatsApp">WhatsApp</label>
+                              <div class="col-sm-9">
+                                <input type="text" id="pontowhatsApp" formControlName="whatsApp" class="form-control"
+                                  placeholder="(00)0000-0000"
+                                  [ngClass]="{ 'is-invalid': submitted && f.whatsApp.errors }">
+                                <div *ngIf="submitted && f.whatsApp.errors" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.whatsApp.errors.required">O whatsApp é
+                                    requirido.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label">Tipo de cabos</label>
+                              <div class="col-sm-9">
+                                <div class="custom-control custom-checkbox" *ngFor="let cabo of tiposDeCabos; let i = index">
+                                  <input type="checkbox" class="custom-control-input" [id]="'cabo' + cabo.id" [name]="'cabo' + cabo.id"  [formControlName]="'cabo' + cabo.id">
+                                  <label class="custom-control-label" [for]="'cabo' + cabo.id">{{cabo.nome}}</label>
+                                </div>
+
+                                <div *ngIf="submitted">
+                                  <small class="form-text text-danger" *ngIf="isInvalidTipoCabos()">
+                                    Selecione ao menos um tipo de cabo.
+                                  </small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label" for="pontodescricao">Sobre nós</label>
+                              <div class="col-sm-9">
+                                <textarea id="pontodescricao" formControlName="descricao" class="form-control"
+                                  id="exampleTextarea1" rows="3"
+                                  placeholder="Aqui vai um texto breve descritivo do local com informações básicas."
+                                  [ngClass]="{ 'is-invalid': submitted && f.descricao.errors }"></textarea>
+                                <div *ngIf="submitted && f.descricao.errors" class="invalid-feedback">
+                                  <small class="form-text" *ngIf="f.descricao.errors.required">A descrição é
+                                    requirida.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- CAMPOS DOS TURNOS DE ATENDIMENTO -->
+
+                        <h4 class="card-title">Horário Atendimento</h4>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-4 col-form-label">Segunda - Turno 01</label>
+                              <div class="col-sm-8">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hsegunda101" formControlName="hsegunda101"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.segunda.pri.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hsegunda102" formControlName="hsegunda102"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.segunda.pri.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-sm-12 justify-content-end d-flex mt-1">
+                                    <button type="button" class="btn btn-primary btn-sm p-1 btn-replicar"
+                                      (click)="replicarHorarios()">Replicar</button>
+                                  </div>
+                                  <div *ngIf="submitted && validHorarios.segunda.pri.invalid"
+                                    class="invalid-feedback d-block col-sm-12">
+                                    <small class="form-text" *ngIf="validHorarios.segunda.pri.sprimeiro">Selecione o
+                                      primeiro
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.segunda.pri.ssegundo">Selecione o
+                                      segundo
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.segunda.pri.igual">O primeiro horário
+                                      não pode ser
+                                      igual ao segundo.</small>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-4 col-form-label">Segunda - Turno 02</label>
+                              <div class="col-sm-8">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hsegunda201" formControlName="hsegunda201"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.segunda.seg.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hsegunda202" formControlName="hsegunda202"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.segunda.seg.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div *ngIf="submitted && validHorarios.segunda.seg.invalid"
+                                    class="invalid-feedback d-block col-sm-12">
+                                    <small class="form-text" *ngIf="validHorarios.segunda.seg.sprimeiro">Selecione o
+                                      primeiro
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.segunda.seg.ssegundo">Selecione o
+                                      segundo
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.segunda.seg.igual">O primeiro horário
+                                      não pode ser
+                                      igual ao segundo.</small>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-4 col-form-label">Terça - Turno 01</label>
+                              <div class="col-sm-8">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hterca0101" formControlName="hterca0101"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.terca.pri.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hterca0102" formControlName="hterca0102"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.terca.pri.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div *ngIf="submitted && validHorarios.terca.pri.invalid"
+                                    class="invalid-feedback d-block col-sm-12">
+                                    <small class="form-text" *ngIf="validHorarios.terca.pri.sprimeiro">Selecione o
+                                      primeiro
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.terca.pri.ssegundo">Selecione o
+                                      segundo
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.terca.pri.igual">O primeiro horário
+                                      não pode ser
+                                      igual ao segundo.</small>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-4 col-form-label">Terça - Turno 02</label>
+                              <div class="col-sm-8">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hterca0201" formControlName="hterca0201"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.terca.seg.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hterca0202" formControlName="hterca0202"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.terca.seg.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div *ngIf="submitted && validHorarios.terca.seg.invalid"
+                                    class="invalid-feedback d-block col-sm-12">
+                                    <small class="form-text" *ngIf="validHorarios.terca.seg.sprimeiro">Selecione o
+                                      primeiro
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.terca.seg.ssegundo">Selecione o
+                                      segundo
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.terca.seg.igual">O primeiro horário
+                                      não pode ser
+                                      igual ao segundo.</small>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-4 col-form-label">Quarta - Turno 01</label>
+                              <div class="col-sm-8">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hquarta0101" formControlName="hquarta0101"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.quarta.pri.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hquarta0102" formControlName="hquarta0102"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.quarta.pri.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div *ngIf="submitted && validHorarios.quarta.pri.invalid"
+                                    class="invalid-feedback d-block col-sm-12">
+                                    <small class="form-text" *ngIf="validHorarios.quarta.pri.sprimeiro">Selecione o
+                                      primeiro
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.quarta.pri.ssegundo">Selecione o
+                                      segundo
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.quarta.pri.igual">O primeiro horário
+                                      não pode ser
+                                      igual ao segundo.</small>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-4 col-form-label">Quarta - Turno 02</label>
+                              <div class="col-sm-8">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hquarta0201" formControlName="hquarta0201"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.quarta.seg.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hquarta0202" formControlName="hquarta0202"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.quarta.seg.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div *ngIf="submitted && validHorarios.quarta.seg.invalid"
+                                    class="invalid-feedback d-block col-sm-12">
+                                    <small class="form-text" *ngIf="validHorarios.quarta.seg.sprimeiro">Selecione o
+                                      primeiro
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.quarta.seg.ssegundo">Selecione o
+                                      segundo
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.quarta.seg.igual">O primeiro horário
+                                      não pode ser
+                                      igual ao segundo.</small>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-4 col-form-label">Quinta - Turno 01</label>
+                              <div class="col-sm-8">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hquinta0101" formControlName="hquinta0101"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.quinta.pri.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hquinta0102" formControlName="hquinta0102"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.quinta.pri.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div *ngIf="submitted && validHorarios.quinta.pri.invalid"
+                                    class="invalid-feedback d-block col-sm-12">
+                                    <small class="form-text" *ngIf="validHorarios.quinta.pri.sprimeiro">Selecione o
+                                      primeiro
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.quinta.pri.ssegundo">Selecione o
+                                      segundo
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.quinta.pri.igual">O primeiro horário
+                                      não pode ser
+                                      igual ao segundo.</small>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-4 col-form-label">Quinta - Turno 02</label>
+                              <div class="col-sm-8">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hquinta0201" formControlName="hquinta0201"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.quinta.seg.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hquinta0202" formControlName="hquinta0202"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.quinta.seg.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div *ngIf="submitted && validHorarios.quinta.seg.invalid"
+                                    class="invalid-feedback d-block col-sm-12">
+                                    <small class="form-text" *ngIf="validHorarios.quinta.seg.sprimeiro">Selecione o
+                                      primeiro
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.quinta.seg.ssegundo">Selecione o
+                                      segundo
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.quinta.seg.igual">O primeiro horário
+                                      não pode ser
+                                      igual ao segundo.</small>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-4 col-form-label">Sexta - Turno 01</label>
+                              <div class="col-sm-8">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hsexta0101" formControlName="hsexta0101"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.sexta.pri.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hsexta0102" formControlName="hsexta0102"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.sexta.pri.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div *ngIf="submitted && validHorarios.sexta.pri.invalid"
+                                    class="invalid-feedback d-block col-sm-12">
+                                    <small class="form-text" *ngIf="validHorarios.sexta.pri.sprimeiro">Selecione o
+                                      primeiro
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.sexta.pri.ssegundo">Selecione o
+                                      segundo
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.sexta.pri.igual">O primeiro horário
+                                      não pode ser
+                                      igual ao segundo.</small>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-4 col-form-label">Sexta - Turno 02</label>
+                              <div class="col-sm-8">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hsexta0201" formControlName="hsexta0201"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.sexta.seg.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hsexta0202" formControlName="hsexta0202"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.sexta.seg.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div *ngIf="submitted && validHorarios.sexta.seg.invalid"
+                                    class="invalid-feedback d-block col-sm-12">
+                                    <small class="form-text" *ngIf="validHorarios.sexta.seg.sprimeiro">Selecione o
+                                      primeiro
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.sexta.seg.ssegundo">Selecione o
+                                      segundo
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.sexta.seg.igual">O primeiro horário
+                                      não pode ser
+                                      igual ao segundo.</small>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-4 col-form-label">Sábado - Turno 01</label>
+                              <div class="col-sm-8">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hsabado0101" formControlName="hsabado0101"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.sabado.pri.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hsabado0102" formControlName="hsabado0102"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.sabado.pri.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div *ngIf="submitted && validHorarios.sabado.pri.invalid"
+                                    class="invalid-feedback d-block col-sm-12">
+                                    <small class="form-text" *ngIf="validHorarios.sabado.pri.sprimeiro">Selecione o
+                                      primeiro
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.sabado.pri.ssegundo">Selecione o
+                                      segundo
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.sabado.pri.igual">O primeiro horário
+                                      não pode ser
+                                      igual ao segundo.</small>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-4 col-form-label">Sábado - Turno 02</label>
+                              <div class="col-sm-8">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hsabado0201" formControlName="hsabado0201"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.sabado.seg.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hsabado0202" formControlName="hsabado0202"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.sabado.seg.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div *ngIf="submitted && validHorarios.sabado.seg.invalid"
+                                    class="invalid-feedback d-block col-sm-12">
+                                    <small class="form-text" *ngIf="validHorarios.sabado.seg.sprimeiro">Selecione o
+                                      primeiro
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.sabado.seg.ssegundo">Selecione o
+                                      segundo
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.sabado.seg.igual">O primeiro horário
+                                      não pode ser
+                                      igual ao segundo.</small>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-4 col-form-label">Domingo - Turno 01</label>
+                              <div class="col-sm-8">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hdomingo0101" formControlName="hdomingo0101"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.domingo.pri.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hdomingo0102" formControlName="hdomingo0102"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.domingo.pri.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div *ngIf="submitted && validHorarios.domingo.pri.invalid"
+                                    class="invalid-feedback d-block col-sm-12">
+                                    <small class="form-text" *ngIf="validHorarios.domingo.pri.sprimeiro">Selecione o
+                                      primeiro
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.domingo.pri.ssegundo">Selecione o
+                                      segundo
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.domingo.pri.igual">O primeiro horário
+                                      não pode ser
+                                      igual ao segundo.</small>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-4 col-form-label">Domingo - Turno 02</label>
+                              <div class="col-sm-8">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hdomingo0201" formControlName="hdomingo0201"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.domingo.seg.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <select class="form-control" id="hdomingo0202" formControlName="hdomingo0202"
+                                      [ngClass]="{ 'is-invalid': submitted && validHorarios.domingo.seg.invalid }">
+                                      <option value="">Selecione...</option>
+                                      <option *ngFor="let hour of ihorarios" [value]="hour">{{hour}}</option>
+                                    </select>
+                                  </div>
+                                  <div *ngIf="submitted && validHorarios.domingo.seg.invalid"
+                                    class="invalid-feedback d-block col-sm-12">
+                                    <small class="form-text" *ngIf="validHorarios.domingo.seg.sprimeiro">Selecione o
+                                      primeiro
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.domingo.seg.ssegundo">Selecione o
+                                      segundo
+                                      horário.</small>
+                                    <small class="form-text" *ngIf="validHorarios.domingo.seg.igual">O primeiro horário
+                                      não pode ser
+                                      igual ao segundo.</small>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- CAMPOS DOS TURNOS DE ATENDIMENTO -->
+                        <h4 class="card-title">Capa e Logo</h4>
+                        <div class="row d-flex align-items-end">
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <div class="col-sm-9 mb-5 justify-content-center d-flex" *ngIf="imagenspreview.capa.show">
+                                <img [src]="imagenspreview.capa.src" alt="" class="imagenpreview">
+                              </div>
+                              <div class="col-sm-12 row">
+                                <label class="col-sm-3 col-form-label" for="upcapa">Capa Ponto</label>
+                                <div class="col-sm-4">
+                                  <input type="text" class="form-control file-upload-info"
+                                    value="{{imagenspreview.capa.filename}}" disabled placeholder="Upload Image"
+                                    [ngClass]="{ 'is-invalid': submitted && f.upcapa.errors }">
+                                </div>
+                                <div class="col-sm-5">
+                                  <input type="file" id="upcapa" formControlName="upcapa" class="d-none"
+                                    (change)="onFileChange('capa', $event)" accept="image/*">
+                                  <button class="file-upload-browse btn btn-info" type="button"
+                                    (click)="openBrowser('upcapa', $event)">Upload</button>
+                                </div>
+                                <div *ngIf="submitted && f.upcapa.errors"
+                                  class="invalid-feedback offset-sm-3 col-sm-9 d-block">
+                                  <small class="form-text" *ngIf="f.upcapa.errors.required">A capa é requirida.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <div class="col-sm-9 mb-5 justify-content-center d-flex" *ngIf="imagenspreview.logo.show">
+                                <img [src]="imagenspreview.logo.src" alt="" class="imagenpreview rounded-circle">
+                              </div>
+                              <div class="col-sm-12 row">
+                                <label class="col-sm-3 col-form-label" for="uplogomarca">Logomarca</label>
+                                <div class="col-sm-4">
+                                  <input type="text" class="form-control file-upload-info"
+                                    value="{{imagenspreview.logo.filename}}" disabled placeholder="Upload Image"
+                                    [ngClass]="{ 'is-invalid': submitted && f.uplogomarca.errors }">
+                                </div>
+                                <div class="col-sm-5">
+                                  <input type="file" id="uplogomarca" formControlName="uplogomarca" class="d-none"
+                                    (change)="onFileChange('logo', $event)" accept="image/*">
+                                  <button class="file-upload-browse btn btn-info" type="button"
+                                    (click)="openBrowser('uplogomarca', $event)">Upload</button>
+                                </div>
+                                <div *ngIf="submitted && f.uplogomarca.errors"
+                                  class="invalid-feedback offset-sm-3 col-sm-9 d-block">
+                                  <small class="form-text" *ngIf="f.uplogomarca.errors.required">A logomarca é
+                                    requirida.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <h4 class="card-title">Pins</h4>
+                        <div class="row d-flex align-items-end">
+                          <div class="col-md-4">
+                            <div class="form-group row">
+                              <div class="col-sm-9 mb-5 justify-content-center d-flex"
+                                *ngIf="imagenspreview.pinonline && imagenspreview.pinonline.show">
+                                <img [src]="imagenspreview.pinonline.src" alt="" class="imagenpreviewpin">
+                              </div>
+                              <div class="col-sm-12 row">
+                                <label class="col-sm-3 col-form-label" for="imgpinonline">On-line</label>
+                                <div class="col-sm-4">
+                                  <input type="text" class="form-control file-upload-info"
+                                    value="{{imagenspreview.pinonline.filename}}" disabled placeholder="Upload Image"
+                                    [ngClass]="{ 'is-invalid': submitted && f.imgpinonline.errors }">
+                                </div>
+                                <div class="col-sm-5">
+                                  <input type="file" id="imgpinonline" formControlName="imgpinonline" class="d-none"
+                                    (change)="onFileChange('pinonline', $event)" accept="image/*">
+                                  <button class="file-upload-browse btn btn-info"
+                                    [disabled]="f.plano.value=='5zXEcCmZeVAbhEPod4pk'" type="button"
+                                    (click)="openBrowser('imgpinonline', $event)">Upload</button>
+                                </div>
+                                <div *ngIf="submitted && f.imgpinonline.errors"
+                                  class="invalid-feedback offset-sm-3 col-sm-9 d-block">
+                                  <small class="form-text" *ngIf="f.imgpinonline.errors.required">A capa é
+                                    requirida.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="form-group row">
+                              <div class="col-sm-9 mb-5 justify-content-center d-flex"
+                                *ngIf="imagenspreview.pinoffline && imagenspreview.pinoffline.show">
+                                <img [src]="imagenspreview.pinoffline.src" alt="" class="imagenpreviewpin">
+                              </div>
+                              <div class="col-sm-12 row">
+                                <label class="col-sm-3 col-form-label" for="imgpinoffline">Off-Line</label>
+                                <div class="col-sm-4">
+                                  <input type="text" class="form-control file-upload-info"
+                                    value="{{imagenspreview.pinoffline.filename}}" disabled placeholder="Upload Image"
+                                    [ngClass]="{ 'is-invalid': submitted && f.imgpinoffline.errors }">
+                                </div>
+                                <div class="col-sm-5">
+                                  <input type="file" id="imgpinoffline" formControlName="imgpinoffline" class="d-none"
+                                    (change)="onFileChange('pinoffline', $event)" accept="image/*">
+                                  <button class="file-upload-browse btn btn-info"
+                                    [disabled]="f.plano.value=='5zXEcCmZeVAbhEPod4pk'" type="button"
+                                    (click)="openBrowser('imgpinoffline', $event)">Upload</button>
+                                </div>
+                                <div *ngIf="submitted && f.imgpinoffline.errors"
+                                  class="invalid-feedback offset-sm-3 col-sm-9 d-block">
+                                  <small class="form-text" *ngIf="f.imgpinoffline.errors.required">A logomarca é
+                                    requirida.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="form-group row">
+                              <div class="col-sm-9 mb-5 justify-content-center d-flex"
+                                *ngIf="imagenspreview.pinprivado && imagenspreview.pinprivado.show">
+                                <img [src]="imagenspreview.pinprivado.src" alt="" class="imagenpreviewpin">
+                              </div>
+                              <div class="col-sm-12 row">
+                                <label class="col-sm-3 col-form-label" for="imgpinprivado">Privado</label>
+                                <div class="col-sm-4">
+                                  <input type="text" class="form-control file-upload-info"
+                                    value="{{imagenspreview.pinprivado.filename}}" disabled placeholder="Upload Image"
+                                    [ngClass]="{ 'is-invalid': submitted && f.imgpinprivado.errors }">
+                                </div>
+                                <div class="col-sm-5">
+                                  <input type="file" id="imgpinprivado" formControlName="imgpinprivado" class="d-none"
+                                    (change)="onFileChange('pinprivado', $event)" accept="image/*">
+                                  <button class="file-upload-browse btn btn-info"
+                                    [disabled]="f.plano.value=='5zXEcCmZeVAbhEPod4pk'" type="button"
+                                    (click)="openBrowser('imgpinprivado', $event)">Upload</button>
+                                </div>
+                                <div *ngIf="submitted && f.imgpinprivado.errors"
+                                  class="invalid-feedback offset-sm-3 col-sm-9 d-block">
+                                  <small class="form-text" *ngIf="f.imgpinprivado.errors.required">A logomarca é
+                                    requirida.</small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <h4 class="card-title">Galeria</h4>
+                        <div class="row d-flex align-items-end">
+                          <!-- Gallery  Row 1 -->
+                          <div class="form-group row">
+                            <!-- Gallery 1 -->
+                            <div class="col-md-2">
+                              <div class="form-group row">
+                                <div class="col-sm-12 mb-5 justify-content-center d-flex image-area">
+                                  <img *ngIf="!localImages[0].src" [src]="imageplaceholder" alt=""
+                                    class="gallerypreview justify-content-center">
+                                  <img *ngIf="localImages[0].src" [src]="localImages[0].src" alt=""
+                                    class="gallerypreview justify-content-center">
+                                  <a *ngIf="localImages[0].src" class="remove-image" href="" style="display: inline;"
+                                    onclick="return false;" (click)="deleteGalleryImage(0)">&#215;</a>
+                                </div>
+                                <div class="col-sm-12 row">
+                                  <label class="col-sm-3 col-form-label" for="gallery1"></label>
+                                  <div class="col-sm-4" hidden>
+                                    <input type="text" class="form-control file-upload-info" value="{{localImages[0]}}"
+                                      disabled>
+                                  </div>
+                                  <div class="col-sm-5">
+                                    <input type="file" id="gallery1" class="d-none"
+                                      (change)="galleryChange(0 , $event.target.files[0])" accept="image/*">
+                                    <button class="file-upload-browse btn btn-info" type="button"
+                                      (click)="openBrowser('gallery1', $event)">Upload</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Gallery 2 -->
+                            <div class="col-md-2">
+                              <div class="form-group row">
+                                <div class="col-sm-12 mb-5 justify-content-center d-flex">
+                                  <img *ngIf="!localImages[1].src" [src]="imageplaceholder" alt=""
+                                    class="gallerypreview justify-content-center">
+                                  <img *ngIf="localImages[1].src" [src]="localImages[1].src" alt=""
+                                    class="gallerypreview justify-content-center">
+                                  <a *ngIf="localImages[1].src" class="remove-image" href="" style="display: inline;"
+                                    onclick="return false;" (click)="deleteGalleryImage(1)">&#215;</a>
+                                </div>
+                                <div class="col-sm-12 row">
+                                  <label class="col-sm-3 col-form-label" for="gallery2"></label>
+                                  <div class="col-sm-4" hidden>
+                                    <input type="text" class="form-control file-upload-info" value="{{localImages[1]}}"
+                                      disabled>
+                                  </div>
+                                  <div class="col-sm-5">
+                                    <input type="file" id="gallery2" class="d-none"
+                                      (change)="galleryChange(1, $event.target.files[0])" accept="image/*">
+                                    <button class="file-upload-browse btn btn-info" type="button"
+                                      (click)="openBrowser('gallery2', $event)">Upload</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Gallery 3 -->
+                            <div class="col-md-2">
+                              <div class="form-group row">
+                                <div class="col-sm-12 mb-5 justify-content-center d-flex">
+                                  <img *ngIf="!localImages[2].src" [src]="imageplaceholder" alt=""
+                                    class="gallerypreview justify-content-center">
+                                  <img *ngIf="localImages[2].src" [src]="localImages[2].src" alt=""
+                                    class="gallerypreview justify-content-center">
+                                  <a *ngIf="localImages[2].src" class="remove-image" href="" style="display: inline;"
+                                    onclick="return false;" (click)="deleteGalleryImage(2)">&#215;</a>
+                                </div>
+                                <div class="col-sm-12 row">
+                                  <label class="col-sm-3 col-form-label" for="gallery3"></label>
+                                  <div class="col-sm-4" hidden>
+                                    <input type="text" class="form-control file-upload-info" value="{{localImages[2]}}"
+                                      disabled>
+                                  </div>
+                                  <div class="col-sm-5">
+                                    <input type="file" id="gallery3" class="d-none"
+                                      (change)="galleryChange(2 , $event.target.files[0])" accept="image/*">
+                                    <button class="file-upload-browse btn btn-info" type="button"
+                                      (click)="openBrowser('gallery3', $event)">Upload</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Gallery 4 -->
+                            <div class="col-md-2">
+                              <div class="form-group row">
+                                <div class="col-sm-12 mb-5 justify-content-center d-flex">
+                                  <img *ngIf="!localImages[3].src" [src]="imageplaceholder" alt=""
+                                    class="gallerypreview justify-content-center">
+                                  <img *ngIf="localImages[3].src" [src]="localImages[3].src" alt=""
+                                    class="gallerypreview justify-content-center">
+                                  <a *ngIf="localImages[3].src" class="remove-image" href="" style="display: inline;"
+                                    onclick="return false;" (click)="deleteGalleryImage(3)">&#215;</a>
+                                </div>
+                                <div class="col-sm-12 row">
+                                  <label class="col-sm-3 col-form-label" for="gallery4"></label>
+                                  <div class="col-sm-4" hidden>
+                                    <input type="text" class="form-control file-upload-info" value="{{localImages[3]}}"
+                                      disabled>
+                                  </div>
+                                  <div class="col-sm-5">
+                                    <input type="file" id="gallery4" class="d-none"
+                                      (change)="galleryChange(3 , $event.target.files[0])" accept="image/*">
+                                    <button class="file-upload-browse btn btn-info" type="button"
+                                      (click)="openBrowser('gallery4', $event)">Upload</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Gallery 5 -->
+                            <div class="col-md-2">
+                              <div class="form-group row">
+                                <div class="col-sm-12 mb-5 justify-content-center d-flex">
+                                  <img *ngIf="!localImages[4].src" [src]="imageplaceholder" alt=""
+                                    class="gallerypreview justify-content-center">
+                                  <img *ngIf="localImages[4].src" [src]="localImages[4].src" alt=""
+                                    class="gallerypreview justify-content-center">
+                                  <a *ngIf="localImages[4].src" class="remove-image" href="" style="display: inline;"
+                                    onclick="return false;" (click)="deleteGalleryImage(4)">&#215;</a>
+                                </div>
+                                <div class="col-sm-12 row">
+                                  <label class="col-sm-3 col-form-label" for="gallery5"></label>
+                                  <div class="col-sm-4" hidden>
+                                    <input type="text" class="form-control file-upload-info" value="{{localImages[4]}}"
+                                      disabled>
+                                  </div>
+                                  <div class="col-sm-5">
+                                    <input type="file" id="gallery5" class="d-none"
+                                      (change)="galleryChange(4 , $event.target.files[0])" accept="image/*">
+                                    <button class="file-upload-browse btn btn-info" type="button"
+                                      (click)="openBrowser('gallery5', $event)">Upload</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Gallery 6 -->
+                            <div class="col-md-2">
+                              <div class="form-group row">
+                                <div class="col-sm-12 mb-5 justify-content-center d-flex">
+                                  <img *ngIf="!localImages[5].src" [src]="imageplaceholder" alt=""
+                                    class="gallerypreview justify-content-center">
+                                  <img *ngIf="localImages[5].src" [src]="localImages[5].src" alt=""
+                                    class="gallerypreview justify-content-center">
+                                  <a *ngIf="localImages[5].src" class="remove-image" href="" style="display: inline;"
+                                    onclick="return false;" (click)="deleteGalleryImage(5)">&#215;</a>
+                                </div>
+                                <div class="col-sm-12 row">
+                                  <label class="col-sm-3 col-form-label" for="gallery6"></label>
+                                  <div class="col-sm-4" hidden>
+                                    <input type="text" class="form-control file-upload-info" value="{{localImages[5]}}"
+                                      disabled>
+                                  </div>
+                                  <div class="col-sm-5">
+                                    <input type="file" id="gallery6" class="d-none"
+                                      (change)="galleryChange(5 , $event.target.files[0])" accept="image/*">
+                                    <button class="file-upload-browse btn btn-info" type="button"
+                                      (click)="openBrowser('gallery6', $event)">Upload</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group row" style="margin-top:25px; margin-left:3px;">
+                              <button type="submit" class="btn btn-success" [disabled]="ponto != null && usuario.cargo !== 'Admin'">Salvar Estabelecimento</button>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab *ngIf="usuario.cargo == 'Admin'">
+            <ng-template *ngIf="pontouid" ngbTabTitle>
+              <i class="mdi mdi-account-outline"></i>Sac <label *ngIf="ponto.adminObservation &&  ponto.adminObservation.length">({{ponto.adminObservation.length}})</label>
+            </ng-template>
+            <ng-template  *ngIf="pontouid" ngbTabContent>
+              <div *ngIf="ponto.adminObservation && ponto.adminObservation.length > 0" class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">Observation</th>
+                      <th scope="col">Date</th>
+                      <th scope="col">User</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let itens of ponto.adminObservation">
+                      <td> {{itens.observation}} </td>
+                      <td> {{formatMoment(itens.date)}} </td>
+                      <td class="text-capitalize"> {{itens.userName}} </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="row mg-top-10">
+                <div class="col-md-12">
+                  <label>Admin Observation</label>
+                  <textarea rows="3" [(ngModel)]="adminObservation" class="form-control form-control-line"></textarea>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row" style="margin-top:25px; margin-left:3px;">
+                    <button [disabled]="!adminObservation" (click)="save()" class="btn btn-success">Salvar sacs</button>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+        </ngb-tabset>
+      </div>
+    </div>
+  </div>
+</div>

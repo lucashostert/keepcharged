@@ -1,0 +1,107 @@
+/* You can add global styles to this file, and also import other style files */
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+@import './assets/styles/variables';
+@import "../node_modules/compass-mixins/lib/compass";
+@import "../node_modules/compass-mixins/lib/animate";
+@import "../node_modules/bootstrap/scss/bootstrap";
+@import "../node_modules/mdi/scss/materialdesignicons";
+@import "../node_modules/font-awesome/scss/font-awesome";
+@import "./assets/styles/fonts";
+@import "./assets/styles/functions";
+@import "./assets/styles/mixins/background";
+@import "./assets/styles/mixins/animation";
+@import "./assets/styles/mixins/badges";
+@import "./assets/styles/mixins/breadcrumbs";
+@import "./assets/styles/mixins/pagination";
+@import "./assets/styles/mixins/buttons";
+@import "./assets/styles/mixins/misc";
+@import "./assets/styles/mixins/color-functions";
+@import "./assets/styles/mixins/cards";
+@import "./assets/styles/mixins/tooltips";
+@import "./assets/styles/mixins/popovers";
+@import "./assets/styles/mixins/blockqoute";
+@import "./assets/styles/accordions";
+@import "./assets/styles/breadcrumbs";
+@import "./assets/styles/forms";
+@import "./assets/styles/icons";
+@import "./assets/styles/tables";
+@import "./assets/styles/buttons";
+@import "./assets/styles/badges";
+@import "./assets/styles/cards";
+@import "./assets/styles/typography";
+@import "./assets/styles/preview";
+@import "./assets/styles/lists";
+@import "./assets/styles/bootstrap-progress";
+@import "./assets/styles/bootstrap-alerts";
+@import "./assets/styles/tabs";
+@import "./assets/styles/dropdowns";
+@import "./assets/styles/pagination";
+@import "./assets/styles/popovers";
+@import "./assets/styles/modals";
+@import "./assets/styles/nav";
+@import "./assets/styles/reset";
+@import "./assets/styles/rating";
+@import "./assets/styles/layouts";
+@import "./assets/styles/tooltips";
+@import "./assets/styles/responsive";
+@import "./assets/styles/misc";
+@import "./assets/styles/utilities";
+@import "./assets/styles/demo";
+/* You can add global styles to this file, and also import other style files */
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
+.navbar.default-layout {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(120deg, #1aa770, #117f67);
+  transition: background 0.25s ease;
+  -webkit-transition: background 0.25s ease;
+  -moz-transition: background 0.25s ease;
+  -ms-transition: background 0.25s ease;
+}
+
+.h-100vh {
+  height: 100vh;
+}
+.card-title {
+    font-family: $type-2;
+    font-weight: 500;
+    color: #404852;
+    margin-bottom: 22px;
+    font-size: 20px;
+    text-transform: capitalize;
+    .rtl & {
+      text-align: right;
+    }
+  }
+  .btn.btn-icons {
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+}
+.btn.btn-icons i {
+  margin: auto;
+  line-height: initial;
+}
+.table td, .table th {
+  vertical-align: middle;
+  font-size: 13px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+:host /deep/ ng2-smart-table {
+  nav {
+    margin-top: 32px !important;
+  }
+}
+
+.border-none {
+  border-radius: 0!important;
+}
+
+.w-85 {
+    width: 85% !important;
+}

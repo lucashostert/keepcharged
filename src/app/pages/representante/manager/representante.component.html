@@ -1,0 +1,97 @@
+<div *ngIf="showpreloader" class="d-flex justify-content-center align-items-center h-100">
+  <img src="./assets/images/loading.gif" alt="Carregando..." width="100">
+</div>
+<div class="row" [class.d-none]="showpreloader">
+  <div class="col-12 d-flex align-items-stretch grid-margin">
+    <div class="row flex-grow">
+      <div class="col-12 stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-2">{{ editing ? 'Perfil do' : 'Cadastro de' }} representante</h4>
+            <p class="card-description mb-4">{{ editing ? 'Altere o perfil do' : 'Cadastre um novo' }} representante.</p>
+
+            <form class="forms-sample" #representanteForm="ngForm" (ngSubmit)="save()">
+              <div class="form-group row">
+                <label for="userEmail" class="col-sm-3 col-form-label">E-mail</label>
+                <div class="col-sm-9">
+                  <input type="email" class="form-control" id="userEmail" name="userEmail" placeholder="E-mail" autocomplete="off" [class.is-invalid]="inputInvalid('userEmail')" [(ngModel)]="user.email" required (keyup)="searchFromEmailUsers()" (focusout)="searchEmailFocusOut()">
+                  <div class="autocomplete" [class.d-none]="!openAutoComplete">
+                    <div class="form-control" *ngFor="let user of ifoundusers" (click)="onOptionSelectUser(user)">
+                      <span>{{user.email}}</span>
+                    </div>
+                  </div>
+                  <div *ngIf="inputInvalid('userEmail')" class="invalid-feedback">
+                    <small class="form-text" *ngIf="inputError('userEmail', 'required')">O e-mail é requirido.</small>
+                    <small class="form-text" *ngIf="inputError('userEmail', 'emailInvalid')">O e-mail é invalido.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="userAvatar" class="col-sm-3 col-form-label">Avatar</label>
+                <div class="col-sm-9 d-flex justify-content-between align-items-end">
+                  <div [class.w-85]="avatar?.image != null" [class.w-100]="avatar?.image == null">
+                    <div class="input-group">
+                      <input type="file" class="d-none" accept="image/*" #inputAvatar (change)="onAvatarChange(inputAvatar.files[0]); inputAvatar.value = '';">
+                      <input type="text" class="col form-control" id="userAvatar" name="userAvatar" placeholder="Imagem selecionada" readonly (click)="inputAvatar.click()" [(ngModel)]="avatar.val">
+                      <div class="input-group-append">
+                        <button class="col btn btn-info" type="button" (click)="inputAvatar.click()">Selecionar</button>
+                      </div>
+                    </div>
+                  </div>
+                  <img *ngIf="avatar?.image != null" [src]="avatar.image" width="40" height="40" class="rounded-circle" />
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="userNome" class="col-sm-3 col-form-label">Nome</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="userNome" name="userNome" placeholder="Nome" [class.is-invalid]="inputInvalid('userNome')" [(ngModel)]="user.nomeCompleto" required>
+                  <div *ngIf="inputInvalid('userNome')" class="invalid-feedback">
+                    <small class="form-text" *ngIf="inputError('userNome', 'required')">O Nome é requirido.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="userCpf" class="col-sm-3 col-form-label">CPF</label>
+                <div class="col-sm-9">
+                  <input type="text" maxlength='14' (keyup)="cpfMask()" class="form-control" id="userCpf" name="userCpf" placeholder="CPF" [class.is-invalid]="inputInvalid('userCpf')" [(ngModel)]="user.cpf" required>
+                  <div *ngIf="inputInvalid('userCpf')" class="invalid-feedback">
+                    <small class="form-text" *ngIf="inputError('userCpf', 'required')">O CPF é requirido.</small>
+                    <small class="form-text" *ngIf="inputError('userCpf', 'cpfInvalid')">Este CPF é invalido.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row" *ngIf="user.id == null">
+                <label for="userPassword" class="col-sm-3 col-form-label">Senha</label>
+                <div class="col-sm-9">
+                  <input type="password" class="form-control" id="userPassword" name="userPassword" placeholder="Senha" autocomplete="off" [class.is-invalid]="inputInvalid('userPassword')" [(ngModel)]="password" required>
+                  <div *ngIf="inputInvalid('userPassword')" class="invalid-feedback">
+                    <small class="form-text" *ngIf="inputError('userPassword', 'required')">A Senha é requirida.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="userCargo" class="col-sm-3 col-form-label">Cargo</label>
+                <div class="col-sm-9">
+                  <select class="form-control" id="userCargo" name="userCargo" [class.is-invalid]="inputInvalid('userCargo')" [(ngModel)]="user.cargo" required>
+                    <option value="">Selecione...</option>
+                    <option *ngFor="let cargo of iCargos" [value]="cargo.nome">{{cargo.nome}}</option>
+                  </select>
+                  <div *ngIf="inputInvalid('userCargo')" class="invalid-feedback">
+                    <small class="form-text" *ngIf="inputError('userCargo', 'required')">O Cargo é requirido.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row" [class.d-none]="user.cargo !== 'Representante'">
+                <label for="userPromocode" class="col-sm-3 col-form-label">Promocode</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="userPromocode" name="userPromocode" placeholder="Promo Code" autocomplete="off" [(ngModel)]="user.promocode">
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">Salvar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

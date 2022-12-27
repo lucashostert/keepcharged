@@ -1,0 +1,66 @@
+<div *ngIf="showpreloader" class="d-flex justify-content-center align-items-center h-100">
+  <img src="./assets/images/loading.gif" alt="Carregando..." width="100">
+</div>
+<div class="row" [class.d-none]="showpreloader">
+  <div class="col-12 d-flex align-items-stretch grid-margin">
+    <div class="row flex-grow">
+      <div class="col-12 stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-1">Categoria</h4>
+            <p class="card-description">{{id?'Edite uma Categoria.':'Cadastre uma nova Categoria.'}} </p>
+            <form class="forms-sample mt-4" name="categoriaForm" #categoriaForm="ngForm" (ngSubmit)="save()">
+              <div class="row">
+                <div class="col-md-9">
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                          <label for="categoriaNome" class="col-sm-3 col-form-label">Nome da categoria</label>
+                          <div class="col px-0">
+                            <input type="text" class="form-control" id="categoriaNome" name="categoriaNome"
+                              placeholder="Nome da categoria" required [(ngModel)]="categoria.nome"
+                              [class.is-invalid]="inputInvalid('categoriaNome')">
+                            <div *ngIf="inputInvalid('categoriaNome')" class="invalid-feedback">
+                              <small class="form-text" *ngIf="inputError('categoriaNome', 'required')">O nome da categoria é requirido.</small>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                          <label for="categoriaBackground" class="col-sm-3 col-form-label">Hexadecimal Inicial</label>
+                          <div class="col px-0">
+                            <input type="color" no-padding class="form-control" id="categoriaBackground" name="categoriaBackground"
+                              placeholder="EX. #FFFFFF" text-uppercase required [(ngModel)]="categoria.background"
+                              [class.is-invalid]="inputInvalid('categoriaBackground')">
+                            <div *ngIf="inputInvalid('categoriaBackground')" class="invalid-feedback">
+                              <small class="form-text" *ngIf="inputError('categoriaBackground', 'required')">Campo requirido.</small>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                          <label for="categoriaBorda" class="col-sm-3 col-form-label">Hexadecimal Final</label>
+                          <div class="col px-0">
+                            <input type="color" no-padding class="form-control" id="categoriaBorda" name="categoriaBorda"
+                              placeholder="EX. #FFFFFF" required [(ngModel)]="categoria.borda"
+                              [class.is-invalid]="inputInvalid('categoriaBorda')">
+                            <div *ngIf="inputInvalid('categoriaBorda')" class="invalid-feedback">
+                              <small class="form-text" *ngIf="inputError('categoriaBorda', 'required')">Campo requirido.</small>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 exemplo" [ngStyle]="{'background': 'linear-gradient(to bottom,'+ categoria.background +','+ categoria.borda +')'}" >
+
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">Salvar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

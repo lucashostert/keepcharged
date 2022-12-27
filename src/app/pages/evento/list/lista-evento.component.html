@@ -1,0 +1,21 @@
+<div *ngIf="showpreloader" class="d-flex justify-content-center align-items-center h-100">
+  <img src="./assets/images/loading.gif" alt="Carregando..." width="100">
+</div>
+<div class="row" *ngIf="!showpreloader">
+  <div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title pull-left">Lista de Eventos</h4>
+        <button class="btn btn-success pull-right" routerLink="/evento">
+          Novo Evento <i class="mdi mdi-plus"></i>
+        </button>
+
+        <div class="table-responsive">
+          <div *ngIf="_page.getData().length > 0">
+            <ng2-smart-table [settings]="datatable" [source]="_page.getData()"></ng2-smart-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

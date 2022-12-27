@@ -1,0 +1,64 @@
+<div *ngIf="showpreloader" class="d-flex justify-content-center align-items-center h-100">
+  <img src="./assets/images/loading.gif" alt="Carregando..." width="100">
+</div>
+<div class="row" [class.d-none]="showpreloader">
+  <div class="col-12 d-flex align-items-stretch grid-margin">
+    <div class="row flex-grow">
+      <div class="col-12 stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-1">Evento</h4>
+            <p class="card-description">Cadastre um novo evento.</p>
+
+            <form class="forms-sample mt-4" name="eventoForm" #eventoForm="ngForm" (ngSubmit)="save()">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="dataDoEvento" class="col-sm-3 col-form-label">Data do Evento</label>
+                    <div class="col-sm-6 px-0">
+                      <input type="date" class="form-control" id="dataDoEvento" name="dataDoEvento" required [(ngModel)]="extraControls.dataDoEvento.val" [class.is-invalid]="inputInvalid('dataDoEvento')">
+                      <div *ngIf="inputInvalid('dataDoEvento')" class="invalid-feedback">
+                        <small class="form-text" *ngIf="inputError('dataDoEvento', 'required')">A data do evento é requirida.</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <div class="input-group">
+                      <input type="file" class="d-none" accept="image/*" #imageFile (change)="onImageFileChange(imageFile.files[0]); imageFile.value = '';">
+                      <label for="imagem" class="col-sm-3 col-form-label">Selecionar uma imagem</label>
+                      <input type="text" class="col form-control" id="imagem" name="imagem" placeholder="Imagem selecionada" readonly required [(ngModel)]="extraControls.imagem.val" [class.is-invalid]="inputInvalid('imagem')" (click)="imageFile.click()">
+                      <div class="input-group-append">
+                        <button class="col btn btn-info" type="button" (click)="imageFile.click()">Selecionar</button>
+                      </div>
+                    </div>
+                    <div *ngIf="inputInvalid('imagem')" class="invalid-feedback d-block offset-sm-3">
+                      <small class="form-text" *ngIf="inputError('imagem', 'required')">A imagem do evento é requirida.</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="link" class="col-sm-3 col-form-label">URL Link</label>
+                    <div class="col px-0">
+                      <input type="text" class="col form-control" id="link" name="link" placeholder="https://exemplo.com/" required [(ngModel)]="evento.link" [class.is-invalid]="inputInvalid('link')">
+                      <div *ngIf="inputInvalid('link')" class="invalid-feedback">
+                        <small class="form-text" *ngIf="inputError('link', 'required')">O link do evento é requirido.</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 d-flex justify-content-center">
+                  <img *ngIf="extraControls.imagem.src" [src]="extraControls.imagem.src" class="img-fluid img180px" alt="Preview Imagem" height="180">
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-success">Salvar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

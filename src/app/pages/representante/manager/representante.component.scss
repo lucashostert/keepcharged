@@ -1,0 +1,21 @@
+.font12px {
+  font-size: 12px;
+}
+
+.autocomplete {
+  padding: 0 12px 0 12px;
+  position: absolute;
+  left: 0;
+  z-index: 100;
+  width: 80%;
+
+  div {
+    border: solid 1px #ccc;
+    border-top: none;
+    line-height: unset;
+
+    span {
+      cursor: pointer;
+    }
+  }
+}

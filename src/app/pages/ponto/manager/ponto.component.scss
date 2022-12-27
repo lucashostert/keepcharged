@@ -1,0 +1,88 @@
+.custom-radio .custom-control-input:checked ~ .custom-control-label::before {
+  background-color: #1aa770;
+}
+
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+  background-color: #1aa770;
+}
+[no-padding] {
+  padding: 0;
+}
+[text-uppercase] {
+  text-transform: uppercase;
+}
+.imagenpreview {
+  max-height: 125px !important;
+}
+
+.imagenpreviewpin {
+  max-height: 80px !important;
+  max-width: 80px !important;
+}
+
+.gallerypreview {
+  max-height: 80px !important;
+  max-width: 80px !important;
+}
+
+.imageninstagram {
+  position: absolute;
+  right: 0;
+  margin-right: 15px;
+  margin-top: 2px;
+}
+
+.imagemloaderinsta {
+  margin-top: 8px;
+}
+
+:host /deep/ ng-select .ng-option,
+:host /deep/ ng-select .ng-value-container {
+  font-size: 0.85rem !important;
+}
+
+.image-area {
+  position: relative;
+  width: 50%;
+}
+.image-area img {
+  max-width: 100%;
+  height: auto;
+}
+.remove-image {
+  display: none;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  border-radius: 10em;
+  padding: 2px 6px 3px;
+  text-decoration: none;
+  font: 700 21px/20px sans-serif;
+  background: #555;
+  border: 3px solid #fff;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  -webkit-transition: background 0.5s;
+  transition: background 0.5s;
+}
+.remove-image:hover {
+  background: #e54e4e;
+  padding: 3px 7px 5px;
+  top: -11px;
+  right: -11px;
+  cursor: pointer;
+}
+.remove-image:active {
+  background: #e54e4e;
+  top: -10px;
+  right: -11px;
+}
+
+.btn-replicar {
+  font-size: 0.6rem !important;
+}
+
+ng-select.ng-in-valid /deep/ .ng-select-container{
+  border-color: #f00;
+}
